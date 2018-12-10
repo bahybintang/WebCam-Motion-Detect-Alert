@@ -1,6 +1,6 @@
 # WebCam Motion Detection Alert
 Simple application using Node.js, p5.js and ml5.js to detect movements using WebCam via network connection.
-Client's view using Vue.js
+Client's Log view using Vue.js
 
 ## Install
 ```bash
@@ -14,5 +14,6 @@ cd ..
 ```bash
 npm run server
 npm run client
-npm run camera
+npm run camera                      #windows
+cd camera && open ./index.html      #Linux or MAC
 ```
