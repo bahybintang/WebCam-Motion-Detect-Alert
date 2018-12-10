@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('motion', () => {
-        console.log("Motion detected");
+        // console.log("Motion detected");
         for(var client in clients){
             io.to(client).emit('motion')
             // console.log(`emitted to ${client}`)
@@ -41,9 +41,15 @@ io.on('connection', (socket) => {
     })
 
     socket.on('un-motion', () => {
-        console.log("Motion undetected!");
+        // console.log("Motion undetected!");
         for(var client in clients){
             io.to(client).emit('un-motion')
+        }
+    })
+
+    socket.on('box', data => {
+        for(var client in clients){
+            io.to(client).emit('box', data);
         }
     })
 })

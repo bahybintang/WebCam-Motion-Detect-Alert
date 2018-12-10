@@ -49,6 +49,8 @@ function detectMotion(poses){
       motionState = onMotion;
     }
   }
+
+  socket.emit('box', { maximums, minimums })
 }
 
 function modelReady(){

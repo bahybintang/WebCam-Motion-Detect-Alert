@@ -1,0 +1,26 @@
+{
+  "name": "motion-detect-alert",
+  "version": "1.0.0",
+  "description": "Simple application using Node.js, p5.js and ml5.js to detect movements using WebCam via network connection.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "cd server && npm run start",
+    "client": "cd vue && npm run serve",
+    "camera": "cd camera && start ./index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahybintang/WebCam-Motion-Detect-Alert.git"
+  },
+  "keywords": [
+    "Motion",
+    "Detect"
+  ],
+  "author": "Bintang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bahybintang/WebCam-Motion-Detect-Alert/issues"
+  },
+  "homepage": "https://github.com/bahybintang/WebCam-Motion-Detect-Alert#readme"
+}
