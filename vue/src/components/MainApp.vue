@@ -6,14 +6,25 @@
           <div v-bind:class="alertClassName">
             <p class="flow-text grey-text text-darken-1">{{ motion }}</p>
           </div>
-          <div class="card-action">
+          <div v-if="!cameraOpened" class="card-action">
             <a href="#" v-on:click="toggleCamera" class="blue-text">{{ cameraText }}</a>
           </div>
         </div>
       </div>
     </div>
 
-    <camera v-bind:isOpened="cameraOpened" v-bind:box="box"></camera>
+    <div v-if="cameraOpened" class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <camera v-bind:isOpened="cameraOpened" v-bind:box="box" v-bind:image="image"></camera>
+          </div>
+          <div class="card-action">
+            <a href="#" v-on:click="toggleCamera" class="blue-text">{{ cameraText }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -30,7 +41,8 @@ export default {
       alertClassName: "card-content",
       box: null,
       cameraOpened: false,
-      cameraText: "Open Camera"
+      cameraText: "Open Camera",
+      image: null
     };
   },
   created() {
@@ -39,6 +51,10 @@ export default {
 
     this.socket.on("box", response => {
       this.box = response;
+    });
+
+    this.socket.on("image", response => {
+      this.image = response;
     });
 
     this.socket.on("motion", () => {

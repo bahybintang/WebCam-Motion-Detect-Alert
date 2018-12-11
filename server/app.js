@@ -52,4 +52,10 @@ io.on('connection', (socket) => {
             io.to(client).emit('box', data);
         }
     })
+
+    socket.on('image', capture => {
+        for(var client in clients){
+            io.to(client).emit('image', capture);
+        }
+    })
 })

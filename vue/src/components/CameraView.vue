@@ -14,14 +14,15 @@ export default {
   },
   props: {
     isOpened: Boolean,
-    box: Object
+    box: Object,
+    image: String
   },
   data: () => ({
-
+    cv: null
   }),
   methods: {
     setup(sketch) {
-      sketch.createCanvas(640, 480);
+      this.cv = sketch.createCanvas(640, 480);
       sketch.background(125, 125, 125);
     },
     draw(sketch) {
@@ -34,7 +35,17 @@ export default {
       //   Math.random() * 255
       // );
 
-      sketch.background(125, 125, 125);
+      // sketch.background(125, 125, 125);
+
+      if(this.image){
+
+        var img = new Image();
+        img.src = this.image;
+        // sketch.image(img, 0, 0, 640, 480);
+        var ctx = this.cv.canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 640, 480);
+        
+      }
 
       sketch.noFill();
       if (this.box) {

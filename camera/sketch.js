@@ -1,4 +1,4 @@
-let capture;
+let capture, img;
 let maximums = {x: 0, y: 0}
 let minimums = {x: 9999, y: 9999}
 let windowX = 640;
@@ -6,17 +6,32 @@ let windowY = 480;
 let socket;
 let onMotion = false;
 let motionState = false;
+let p5canvas;
 
 function setup() {
   var con = window.prompt("Enter link", "http://localhost:3000");
   socket = io.connect(con);
   socket.emit('type', {type: "Camera"});
-  createCanvas(windowX, windowY);
+  p5canvas = createCanvas(windowX, windowY);
+
   capture = createCapture(VIDEO);
+
   capture.size(windowX, windowY);
   capture.hide();
   poseNet = ml5.poseNet(capture, modelReady);
   poseNet.on('pose', detectMotion);
+
+  // setInterval(() => {
+  //   // saveFrames('out', 'png', 1, 1, frame => {
+  //   //   socket.emit('image', frame[0].imageData);
+  //   //   // img = frame[0].imageData;
+  //   //   // console.log(frame[0].imageData)
+  //   // })
+
+  //   // img = new Image();
+  //   img = p5canvas.canvas.toDataURL();
+  //   socket.emit('image', img);
+  // }, 200);
 }
 
 function detectMotion(poses){
@@ -50,7 +65,7 @@ function detectMotion(poses){
     }
   }
 
-  socket.emit('box', { maximums, minimums })
+  socket.emit('box', { maximums, minimums });
 }
 
 function modelReady(){
@@ -58,8 +73,12 @@ function modelReady(){
 }
 
 function draw() {
+  img = p5canvas.canvas.toDataURL();
+  socket.emit('image', img);
+
   background(220);
   image(capture, 0, 0, windowX, windowY);
+
   stroke(255, 255, 255);
   noFill();
   rect(minimums.x, minimums.y, maximums.x - minimums.x, maximums.y - minimums.y);
