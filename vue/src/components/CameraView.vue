@@ -18,16 +18,20 @@ export default {
     image: String
   },
   data: () => ({
-    cv: null
+    cv: null,
+    img: null,
+    ctx: null
   }),
+  created() {
+    this.img = new Image();
+  },
   methods: {
     setup(sketch) {
       this.cv = sketch.createCanvas(640, 480);
+      this.ctx = this.cv.canvas.getContext('2d');
       sketch.background(125, 125, 125);
     },
     draw(sketch) {
-      sketch.stroke(255, 255, 255);
-
       // Background Flashing for Debug
       // sketch.background(
       //   Math.random() * 255,
@@ -35,18 +39,14 @@ export default {
       //   Math.random() * 255
       // );
 
-      // sketch.background(125, 125, 125);
+      //  sketch.background(0);
 
       if(this.image){
-
-        var img = new Image();
-        img.src = this.image;
-        // sketch.image(img, 0, 0, 640, 480);
-        var ctx = this.cv.canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 640, 480);
-        
+        this.img.src = this.image;
+        this.ctx.drawImage(this.img, 0, 0, 640, 480);
       }
 
+      sketch.stroke(255, 255, 255);
       sketch.noFill();
       if (this.box) {
         sketch.rect(

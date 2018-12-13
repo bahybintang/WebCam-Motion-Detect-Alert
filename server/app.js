@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const ss = require('socket.io-stream');
 
 var cameras = {};
 var clients = {};

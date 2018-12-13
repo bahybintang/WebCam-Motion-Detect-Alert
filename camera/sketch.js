@@ -1,6 +1,6 @@
 let capture, img;
-let maximums = {x: 0, y: 0}
-let minimums = {x: 9999, y: 9999}
+let maximums = { x: 0, y: 0 }
+let minimums = { x: 9999, y: 9999 }
 let windowX = 640;
 let windowY = 480;
 let socket;
@@ -11,7 +11,7 @@ let p5canvas;
 function setup() {
   var con = window.prompt("Enter link", "http://localhost:3000");
   socket = io.connect(con);
-  socket.emit('type', {type: "Camera"});
+  socket.emit('type', { type: "Camera" });
   p5canvas = createCanvas(windowX, windowY);
 
   capture = createCapture(VIDEO);
@@ -21,26 +21,20 @@ function setup() {
   poseNet = ml5.poseNet(capture, modelReady);
   poseNet.on('pose', detectMotion);
 
-  // setInterval(() => {
-  //   // saveFrames('out', 'png', 1, 1, frame => {
-  //   //   socket.emit('image', frame[0].imageData);
-  //   //   // img = frame[0].imageData;
-  //   //   // console.log(frame[0].imageData)
-  //   // })
-
-  //   // img = new Image();
-  //   img = p5canvas.canvas.toDataURL();
-  //   socket.emit('image', img);
-  // }, 200);
+  setInterval(() => {
+    socket.emit('box', { maximums, minimums });
+    img = p5canvas.canvas.toDataURL('image/webp', 0.02);
+    socket.emit('image', img);
+  }, 5)
 }
 
-function detectMotion(poses){
+function detectMotion(poses) {
   maximums.x = maximums.y = 0;
   minimums.x = minimums.y = 99999;
-  if(poses.length > 0){
+  if (poses.length > 0) {
     onMotion = true;
-    for(var i = 0; i < 17; i++){
-      if(poses[0].pose.keypoints[i].score > 0.01){
+    for (var i = 0; i < 17; i++) {
+      if (poses[0].pose.keypoints[i].score > 0.01) {
         maximums.x = Math.max(maximums.x, poses[0].pose.keypoints[i].position.x);
         maximums.y = Math.max(maximums.y, poses[0].pose.keypoints[i].position.y);
         minimums.x = Math.min(minimums.x, poses[0].pose.keypoints[i].position.x);
@@ -48,34 +42,29 @@ function detectMotion(poses){
       }
     }
   }
-  else{
+  else {
     onMotion = false;
   }
 
-  if(onMotion){
-    if(motionState != onMotion){
+  if (onMotion) {
+    if (motionState != onMotion) {
       socket.emit('motion');
       motionState = onMotion;
     }
   }
-  else if(!onMotion){
-    if(motionState != onMotion){
+  else if (!onMotion) {
+    if (motionState != onMotion) {
       socket.emit('un-motion');
       motionState = onMotion;
     }
   }
-
-  socket.emit('box', { maximums, minimums });
 }
 
-function modelReady(){
- 	 select("#status").html("WebCam Loaded");
+function modelReady() {
+  select("#status").html("WebCam Loaded");
 }
 
 function draw() {
-  img = p5canvas.canvas.toDataURL();
-  socket.emit('image', img);
-
   background(220);
   image(capture, 0, 0, windowX, windowY);
 
